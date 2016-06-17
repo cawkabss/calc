@@ -7,7 +7,11 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "cleanup": "rm -rf css/build/*",
+    "predevelopment": "npm run cleanup",
+    "development": "sass --watch css/scss:css/build --style=expanded",
+    "preproduction": "npm run cleanup",
+    "production": "sass css/scss/style.scss css/build/style.css --style=compressed --sourcemap=none"
   },
   "repository": {
     "type": "git",
