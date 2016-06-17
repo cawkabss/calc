@@ -55,6 +55,7 @@ $input_bgc: #4c4c4c;
 .op{
   @extend %btn;
   background-color: $op_bgc;
+  color: #fff;
   &:active{
     background-color: darken($op_bgc, 30%);
   }
