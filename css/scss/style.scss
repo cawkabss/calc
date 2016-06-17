@@ -1,0 +1,66 @@
+@import "../../node_modules/normalize.scss/normalize";
+@mixin clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+$btn_bgc: #e0e0e0;
+$op_bgc: #f79231;
+$input_bgc: #4c4c4c;
+
+%btn{
+  display: inline-block;
+  float: left;
+  width: 25%;
+  height: 48px;
+  padding: 0;
+  margin: 0;
+  border: 1px solid #8f8f8f;
+  font-size: 25px;
+  background-color: $btn_bgc;
+  outline: none;
+}
+*{
+  box-sizing: border-box;
+}
+.row{
+  @include clearfix;
+}
+.calc{
+  margin: 100px auto;
+  width: 230px;
+  height: 320px;
+  border: 1px solid #bdbdbd;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.input-text{
+  width: 100%;
+  height: 80px;
+  padding-right: 15px;
+  background-color: $input_bgc;
+  font-size: 40px;
+  text-align: right;
+  border: none;
+  color: #fff;
+}
+.btn{
+  @extend %btn;
+  &:active{
+    background-color: darken($btn_bgc, 30%);
+  }
+}
+.op{
+  @extend %btn;
+  background-color: $op_bgc;
+  &:active{
+    background-color: darken($op_bgc, 30%);
+  }
+}
+.zero{
+  width: 50%;
+  text-align: left;
+  padding-left: 22px;
+}
