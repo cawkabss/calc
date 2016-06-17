@@ -398,7 +398,8 @@ th {
   background-color: #949494; }
 
 .op {
-  background-color: #f79231; }
+  background-color: #f79231;
+  color: #fff; }
   .op:active {
     background-color: #8a4605; }
 
