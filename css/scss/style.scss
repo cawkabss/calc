@@ -1,5 +1,29 @@
 @import "../../node_modules/normalize.scss/normalize";
 
+@mixin font-face($font-base-path, $font-family, $font-weight, $font-style: normal) {
+
+  // Normalize parameters
+  $font-family: to_lower_case($font-family);
+  $font-style: if($font-style == normal, null, #{$font-style});
+
+  // Generate path & name
+  $file-path: #{$font-base-path}#{$font-family}/#{$font-weight}if(unary_not($font-style), null, -#{$font-style});
+  $file-name: #{$font-family}-#{$font-weight}if(unary_not($font-style), null, -#{$font-style});
+
+  // Generate @font-face
+  @font-face {
+    font-family: #{$font-family};
+    src: url('#{$file-path}/#{$file-name}.eot');
+    src: url('#{$file-path}/#{$file-name}.eot?#iefix') format('embedded-opentype'),
+    url('#{$file-path}/#{$file-name}.woff') format('woff'),
+    url('#{$file-path}/#{$file-name}.ttf') format('truetype'),
+    url('#{$file-path}/#{$file-name}.svg##{$font-family}') format('svg');
+
+    font-weight: $font-weight;
+    font-style: $font-style;
+  }
+}
+@include font-face("../../fonts/", "helvetica", 300);
 @mixin clearfix {
   &:after {
     content: "";
@@ -12,16 +36,20 @@ $op_bgc: #f79231;
 $input_bgc: #4c4c4c;
 
 %btn{
-  display: inline-block;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   float: left;
   width: 25%;
   height: 48px;
   padding: 0;
   margin: 0;
-  border: 1px solid #8f8f8f;
+  border: none;
   font-size: 25px;
   background-color: $btn_bgc;
   outline: none;
+  box-shadow: 1px -1px 0 rgba(0,0,0,.4) inset;
 }
 *{
   box-sizing: border-box;
@@ -36,6 +64,8 @@ $input_bgc: #4c4c4c;
   border: 1px solid #bdbdbd;
   border-radius: 5px;
   overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0,0,0,.3);
+  font-family: helvetica;
 }
 .input-text{
   width: 100%;
@@ -46,6 +76,9 @@ $input_bgc: #4c4c4c;
   text-align: right;
   border: none;
   color: #fff;
+}
+.buttons :last-child :first-child{
+    width: 50%;
 }
 .btn{
   @extend %btn;
@@ -60,9 +93,4 @@ $input_bgc: #4c4c4c;
   &:active{
     background-color: darken($op_bgc, 30%);
   }
-}
-.zero{
-  width: 50%;
-  text-align: left;
-  padding-left: 22px;
 }
