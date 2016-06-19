@@ -58,7 +58,7 @@ $input_bgc: #4c4c4c;
   @include clearfix;
 }
 .calc{
-  margin: 100px auto;
+  margin: 50px auto 50px auto;
   width: 230px;
   height: 320px;
   border: 1px solid #bdbdbd;
@@ -66,6 +66,32 @@ $input_bgc: #4c4c4c;
   overflow: hidden;
   box-shadow: 0 10px 40px rgba(0,0,0,.3);
   font-family: helvetica;
+  transition: all .5s, linear;
+}
+.calc-header{
+  position: relative;
+}
+.icons{
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.icon{
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin: 3px 0 0 7px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.close{
+  background-color: #ff554d;
+}
+.turn{
+  background-color: #ffbe2e;
+}
+.expand{
+  background-color: #29cc42;
 }
 .input-text{
   width: 100%;
@@ -92,5 +118,15 @@ $input_bgc: #4c4c4c;
   color: #fff;
   &:active{
     background-color: darken($op_bgc, 30%);
+  }
+}
+.calc-icon{
+  display: block;
+  width: 50px;
+  height: 50px;
+  margin: auto;
+  cursor: pointer;
+  &:hover{
+    transform: scale(1.2);
   }
 }
