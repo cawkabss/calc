@@ -13,7 +13,11 @@ function onBtnClick(event) {
         value = btn.dataset.value,
         keyCode = event.keyCode,
         shift = event.shiftKey;
-    return calc(operator, value, keyCode, event, shift);
+    if(keyCode){
+        value = undefined;
+        operator = undefined;
+    }
+    calc(operator, value, keyCode, event, shift);
 }
 function calc(operator, value, keyCode, event, shift){
     if (value) {
