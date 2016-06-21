@@ -1,5 +1,7 @@
 @import "../../node_modules/normalize.scss/normalize";
 
+/* Add font-face */
+
 @mixin font-face($font-base-path, $font-family, $font-weight, $font-style: normal) {
 
   // Normalize parameters
@@ -24,6 +26,9 @@
   }
 }
 @include font-face("../../fonts/", "helvetica", 300);
+
+/* Clearfix */
+
 @mixin clearfix {
   &:after {
     content: "";
@@ -76,7 +81,7 @@ $input_bgc: #4c4c4c;
   top: 0;
   left: 0;
 }
-.icon{
+%icon{
   display: inline-block;
   width: 10px;
   height: 10px;
@@ -84,13 +89,16 @@ $input_bgc: #4c4c4c;
   border-radius: 50%;
   cursor: pointer;
 }
-.close{
+.icon-close{
+  @extend %icon;
   background-color: #ff554d;
 }
-.turn{
+.icon-turn{
+  @extend %icon;
   background-color: #ffbe2e;
 }
-.expand{
+.icon-expand{
+  @extend %icon;
   background-color: #29cc42;
 }
 .input-text{
@@ -112,8 +120,7 @@ $input_bgc: #4c4c4c;
     background-color: darken($btn_bgc, 30%);
   }
 }
-.op{
-  @extend %btn;
+.main-operator{
   background-color: $op_bgc;
   color: #fff;
   &:active{
