@@ -119,11 +119,17 @@ $input_bgc: #4c4c4c;
   &:active{
     background-color: darken($btn_bgc, 30%);
   }
+  &-active{
+    background-color: darken($btn_bgc, 30%);
+  }
 }
 .main-operator{
   background-color: $op_bgc;
   color: #fff;
   &:active{
+    background-color: darken($op_bgc, 30%);
+  }
+  &-active{
     background-color: darken($op_bgc, 30%);
   }
 }

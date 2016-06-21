@@ -1,4 +1,5 @@
 'use strict';
+
 var result = '';
 var operand = '';
 var elements = document.getElementsByClassName('btn');
@@ -17,7 +18,7 @@ function onBtnClick(event) {
         value = undefined;
         operator = undefined;
     }
-    calc(operator, value, keyCode, event, shift);
+    calc(operator, value, keyCode, event, shift, btn);
 }
 function calc(operator, value, keyCode, event, shift){
     if (value) {
@@ -37,37 +38,79 @@ function calc(operator, value, keyCode, event, shift){
     }
 }
 function keyCodeCheck(keyCode, event, shift){
+    var elem;
     if(48 <= keyCode && keyCode <= 57){
         if(keyCode === 56 && shift === true ){
             result += operand + '*';
             operand = "";
+            elem = document.querySelector('[data-operator="*"]');
+            elem.classList.add('main-operator-active');
+            setTimeout(function(){
+                elem.classList.remove('main-operator-active');
+            }, 100)
         }
         else if(keyCode === 53 && shift === true ){
             operatorsList('percent');
+            elem = document.querySelector('[data-operator="percent"]');
+            elem.classList.add('btn-active');
+            setTimeout(function(){
+                elem.classList.remove('btn-active');
+            }, 100)
         }
         else{
             operand += String.fromCharCode(event.which);
             inputElement.value = operand;
+            var att = '[' + 'data-value=' + '"' + String.fromCharCode(event.which) + '"' + ']';
+            elem = document.querySelector(att);
+            elem.classList.add('btn-active');
+            setTimeout(function(){
+                elem.classList.remove('btn-active');
+            }, 100)
         }
     }
     else if(keyCode === 187){
             if(keyCode === 187 && shift === true){
                 result += operand + '+';
                 operand = "";
+                elem = document.querySelector('[data-operator="+"]');
+                elem.classList.add('main-operator-active');
+                setTimeout(function(){
+                    elem.classList.remove('main-operator-active');
+                }, 100)
             }else{
                 operatorsList('result');
+                elem = document.querySelector('[data-operator="result"]');
+                elem.classList.add('main-operator-active');
+                setTimeout(function(){
+                    elem.classList.remove('main-operator-active');
+                }, 100)
             }
     }
     else if(keyCode === 46 || keyCode === 8){
         operatorsList('clean');
+        elem = document.querySelector('[data-operator="clean"]');
+        elem.classList.add('btn-active');
+        setTimeout(function(){
+            elem.classList.remove('btn-active');
+        }, 100)
     }
     else if(keyCode === 189){
         result += operand + '-';
         operand = "";
+        elem = document.querySelector('[data-operator="-"]');
+        elem.classList.add('main-operator-active');
+        setTimeout(function(){
+            elem.classList.remove('main-operator-active');
+        }, 100)
     }
     else if(keyCode === 191){
         result += operand + '/';
         operand = "";
+        elem = document.querySelector('[data-operator="/"]');
+        elem.classList.add('main-operator-active');
+        setTimeout(function(){
+            elem.classList.remove('main-operator-active');
+        }, 100)
     }
     else if(keyCode === 190){
             if(operand.indexOf('.') > 0){
@@ -75,6 +118,11 @@ function keyCodeCheck(keyCode, event, shift){
             }
         operand += '.';
         inputElement.value = operand;
+        elem = document.querySelector('[data-operator="."]');
+        elem.classList.add('btn-active');
+        setTimeout(function(){
+            elem.classList.remove('btn-active');
+        }, 100)
     }
 }
 function resetCalculator () {
@@ -83,6 +131,7 @@ function resetCalculator () {
 }
 function operatorsList(operator){
     if(operator === 'result'){
+        if(!operand) return;
         result += operand;
         result = eval(result);
         inputElement.value = result;
@@ -137,19 +186,19 @@ for (i = 0; i < icons.length; i++) {
 function onIconClick(event){
     var icon = event.target,
         iconClassName = icon.className;
-    if(iconClassName === 'icon close'){
+    if(iconClassName === 'icon icon-close'){
         calculator.style.cssText = 'opacity: 0;\
     transform: rotate(90deg) translate(320px);\
     height: 0;';
         calculator.setAttribute('close', 'true');
     }
-    else if(iconClassName === 'icon turn'){
+    else if(iconClassName === 'icon icon-turn'){
         calculator.style.cssText = 'opacity: 0;\
     transform: translate(0, 320px);\
     height: 0;';
         calculator.setAttribute('turn', 'true');
     }
-    else if(iconClassName === 'icon expand'){
+    else if(iconClassName === 'icon icon-expand'){
         if(icon.getAttribute('active') === 'true'){
             calculator.style.cssText = 'transform: scale(1);';
             icon.setAttribute('active', 'false');
@@ -172,4 +221,3 @@ calcIcon.onclick = function(){
         calculator.setAttribute('turn', 'false');
     }
 };
-
