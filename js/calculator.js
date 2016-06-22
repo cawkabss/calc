@@ -1,223 +1,180 @@
 'use strict';
-
-var result = '';
-var operand = '';
-var elements = document.getElementsByClassName('btn');
-var inputElement = document.getElementsByClassName('input-text')[0];
-var calculator = document.getElementsByClassName('calc')[0];
-var icons = document.getElementsByClassName('icon');
-var calcIcon = document.getElementsByClassName('calc-icon')[0];
-
-function onBtnClick(event) {
+function eventCheck(event){
     var btn = event.target,
-        operator = btn.dataset.operator,
+        op = btn.dataset.operator,
         value = btn.dataset.value,
         keyCode = event.keyCode,
         shift = event.shiftKey;
     if(keyCode){
-        value = undefined;
-        operator = undefined;
+        calculator.keyChecker(keyCode, event, shift);
     }
-    calc(operator, value, keyCode, event, shift, btn);
-}
-function calc(operator, value, keyCode, event, shift){
-    if (value) {
-        operand += value;
-        inputElement.value = operand;
+    else if (value) {
+        calculator.number(value);
     }
-    else if(keyCode){
-        keyCodeCheck(keyCode, event, shift);
+    else if(btn.classList.contains('icon')){
+        calculator.iconsChecker(btn);
     }
     else{
-        if(operand){
-            operatorsList(operator, value);
-        }
-        else if (operator === 'clean'){
-            operatorsList(operator, value);
-        }
+        calculator.operator(op);
     }
 }
-function keyCodeCheck(keyCode, event, shift){
-    var elem;
-    if(48 <= keyCode && keyCode <= 57){
-        if(keyCode === 56 && shift === true ){
-            result += operand + '*';
-            operand = "";
-            elem = document.querySelector('[data-operator="*"]');
-            elem.classList.add('main-operator-active');
+function NewCalc(){
+    this.elements = document.getElementsByClassName('btn');
+    this.display = document.getElementsByClassName('input-text')[0];
+    this.calculator = document.getElementsByClassName('calc')[0];
+    this.icons = document.getElementsByClassName('icon');
+    this.prevOperator = '';
+    this.result = 0;
+    this.showResult = false;
+    this.clean = function(){
+        this.prevOperator = '';
+        this.result = 0;
+        this.display.value = '0';
+        this.showResult = false;
+    };
+    this.number = function(value){
+        var newValue;
+        if(this.showResult){
+            this.clearDisplay();
+            this.showResult = false;
+        }
+        if(value === '.'){
+            if(this.display.value.indexOf('.') > -1) return;
+            newValue = (this.display.value === "0" ) ? 0 + value : this.display.value + value;
+            this.display.value = newValue;
+        }
+        else{
+            newValue = (this.display.value === "0" ) ? value : this.display.value + value;
+            this.display.value = newValue;
+        }
+    };
+    this.operator = function(op){
+        if(!this.showResult){
+            switch(this.prevOperator){
+                case '+':
+                    this.result = this.result + parseFloat(this.display.value);
+                    break;
+                case '-':
+                    this.result = this.result - parseFloat(this.display.value);
+                    break;
+                case '*':
+                    this.result = this.result * parseFloat(this.display.value);
+                    break;
+                case '/':
+                    this.result = this.result / parseFloat(this.display.value);
+                    break;
+                default: this.result = parseFloat(this.display.value);
+            }
+        }
+        if(op === 'clean'){
+            this.clean();
+        }
+        if (op === 'minus-plus'){
+            var str = parseFloat(this.display.value);
+            this.result = (str[0] === '-') ? Number(str.slice(1)) : - + Number(str);
+            this.display.value = this.result;
+        }
+        if(op === 'percent'){
+            this.result = parseFloat(this.display.value) / 100;
+            this.display.value = this.result;
+        }
+        if(this.prevOperator){
+            this.display.value = this.result;
+        }
+        this.prevOperator = (op === 'result') ? null : op;
+        this.showResult = true;
+    };
+    this.clearDisplay = function () {
+        this.display.value = '0';
+    };
+
+    this.keyChecker = function (keyCode, event, shift){
+        var calcKeys = {
+            48: ['[data-value="0"]', 0], 49: ['[data-value="1"]', 1],
+            50: ['[data-value="2"]', 2], 51: ['[data-value="3"]', 3],
+            52: ['[data-value="4"]', 4], 53: ['[data-value="5"]', 5],
+            54: ['[data-value="6"]', 6], 55: ['[data-value="7"]', 7],
+            56: ['[data-value="8"]', 8], 57: ['[data-value="9"]', 9],
+            106: ['[data-operator="*"]', '*'], 107: ['[data-operator="+"]', '+'],
+            109: ['[data-operator="-"]', '-'], 189: ['[data-operator="-"]', '-'],
+            110: ['[data-value="."]', '.'], 111: ['[data-operator="/"]', '/'],
+            8: ['[data-operator="clean"]', 'clean'], 13: ['[data-operator="result"]', 'result'],
+            46: ['[data-operator="clean"]', 'clean'], percent: ['[data-operator="percent"]', 'percent'],
+            187: ['[data-operator="result"]', 'result'], 191: ['[data-operator="/"]', '/'],
+            190: ['[data-value="."]', '.']
+            };
+        var elem;
+        var key = keyCode;
+        if(shift){
+            switch(keyCode){
+                case 53:
+                    key = 'percent';
+                    break;
+                case 187:
+                    key = 107;
+                    break;
+                case 56:
+                    key = 106;
+                    break;
+            }
+        }
+        var attribute = calcKeys[key][0];
+        if(48 <= key && key <= 57 || key === 190){
+            this.number(calcKeys[key][1]);
+            elem = document.querySelector(attribute);
+            elem.classList.add('btn-active');
             setTimeout(function(){
-                elem.classList.remove('main-operator-active');
+                elem.classList.remove('btn-active');
             }, 100)
         }
-        else if(keyCode === 53 && shift === true ){
-            operatorsList('percent');
-            elem = document.querySelector('[data-operator="percent"]');
+        else if(key === 8 || key === 46 || key === 'percent'){
+            this.operator(calcKeys[key][1]);
+            elem = document.querySelector(attribute);
             elem.classList.add('btn-active');
             setTimeout(function(){
                 elem.classList.remove('btn-active');
             }, 100)
         }
         else{
-            operand += String.fromCharCode(event.which);
-            inputElement.value = operand;
-            var att = '[' + 'data-value=' + '"' + String.fromCharCode(event.which) + '"' + ']';
-            elem = document.querySelector(att);
-            elem.classList.add('btn-active');
+            this.operator(calcKeys[key][1]);
+            elem = document.querySelector(attribute);
+            elem.classList.add('main-operator-active');
             setTimeout(function(){
-                elem.classList.remove('btn-active');
+                elem.classList.remove('main-operator-active');
             }, 100)
         }
-    }
-    else if(keyCode === 187){
-            if(keyCode === 187 && shift === true){
-                result += operand + '+';
-                operand = "";
-                elem = document.querySelector('[data-operator="+"]');
-                elem.classList.add('main-operator-active');
-                setTimeout(function(){
-                    elem.classList.remove('main-operator-active');
-                }, 100)
-            }else{
-                operatorsList('result');
-                elem = document.querySelector('[data-operator="result"]');
-                elem.classList.add('main-operator-active');
-                setTimeout(function(){
-                    elem.classList.remove('main-operator-active');
-                }, 100)
+    };
+    this.iconsChecker = function(btn){
+        if(btn.classList.contains('icon-close')){
+            this.calculator.classList.add('calc-close');
+        }
+        else if(btn.classList.contains('icon-turn')){
+            this.calculator.classList.add('calc-turn');
+        }
+        else if(btn.classList.contains('icon-expand')){
+            if(this.calculator.classList.contains('calc-expand')){
+                this.calculator.classList.remove('calc-expand');
             }
-    }
-    else if(keyCode === 46 || keyCode === 8){
-        operatorsList('clean');
-        elem = document.querySelector('[data-operator="clean"]');
-        elem.classList.add('btn-active');
-        setTimeout(function(){
-            elem.classList.remove('btn-active');
-        }, 100)
-    }
-    else if(keyCode === 189){
-        result += operand + '-';
-        operand = "";
-        elem = document.querySelector('[data-operator="-"]');
-        elem.classList.add('main-operator-active');
-        setTimeout(function(){
-            elem.classList.remove('main-operator-active');
-        }, 100)
-    }
-    else if(keyCode === 191){
-        result += operand + '/';
-        operand = "";
-        elem = document.querySelector('[data-operator="/"]');
-        elem.classList.add('main-operator-active');
-        setTimeout(function(){
-            elem.classList.remove('main-operator-active');
-        }, 100)
-    }
-    else if(keyCode === 190){
-            if(operand.indexOf('.') > 0){
-                return;
+            else{
+                this.calculator.classList.add('calc-expand');
             }
-        operand += '.';
-        inputElement.value = operand;
-        elem = document.querySelector('[data-operator="."]');
-        elem.classList.add('btn-active');
-        setTimeout(function(){
-            elem.classList.remove('btn-active');
-        }, 100)
-    }
-}
-function resetCalculator () {
-    result = '';
-    operand = '';
-}
-function operatorsList(operator){
-    if(operator === 'result'){
-        if(!operand) return;
-        result += operand;
-        result = eval(result);
-        inputElement.value = result;
-        if(String(result).charAt(0) === '0'){
-            resetCalculator ()
-        }else{
-            operand = result;
-            result = '';
+        }
+        else{
+            if(this.calculator.classList.contains('calc-close')){
+                this.calculator.classList.remove('calc-close');
+            }
+            else{
+                this.calculator.classList.remove('calc-turn');
+            }
         }
     }
-    else if(operator === 'clean'){
-        resetCalculator();
-        inputElement.value = "0";
-    }
-    else if(operator === 'percent'){
-        operand = operand/100;
-        inputElement.value = operand;
-        result = '';
-    }
-    else if(operator === '.'){
-        if(operand.indexOf('.') > 0){
-            return;
-        }
-        operand += '.';
-        inputElement.value = operand;
-    }
-    else if(operator === 'minus'){
-        if(String(operand).charAt(0) === '-'){
-        }else{
-            operand = '-' + operand;
-            inputElement.value = operand;
-        }
-    }else{
-        result += operand + operator;
-        operand = "";
-    }
 }
-//Added listener on buttons
+var calculator = new NewCalc();
 
-for (var i = 0; i < elements.length; i++) {
-    elements[i].addEventListener('click', onBtnClick);
+for (var i = 0; i < calculator.elements.length; i++) {
+    calculator.elements[i].addEventListener('click', eventCheck);
 }
-//Add listener on keyboard
-
-addEventListener('keydown', onBtnClick);
-
-//Add listener on calculator-header icons
-
-for (i = 0; i < icons.length; i++) {
-    icons[i].addEventListener('click', onIconClick);
+window.addEventListener('keydown', eventCheck);
+for (i = 0; i < calculator.icons.length; i++) {
+    calculator.icons[i].addEventListener('click', eventCheck);
 }
-function onIconClick(event){
-    var icon = event.target,
-        iconClassName = icon.className;
-    if(iconClassName === 'icon icon-close'){
-        calculator.style.cssText = 'opacity: 0;\
-    transform: rotate(90deg) translate(320px);\
-    height: 0;';
-        calculator.setAttribute('close', 'true');
-    }
-    else if(iconClassName === 'icon icon-turn'){
-        calculator.style.cssText = 'opacity: 0;\
-    transform: translate(0, 320px);\
-    height: 0;';
-        calculator.setAttribute('turn', 'true');
-    }
-    else if(iconClassName === 'icon icon-expand'){
-        if(icon.getAttribute('active') === 'true'){
-            calculator.style.cssText = 'transform: scale(1);';
-            icon.setAttribute('active', 'false');
-            return;
-        }
-        calculator.style.cssText = 'transform: scale(1.3);';
-        icon.setAttribute('active', 'true');
-    }
-}
-
-// Add listener on calculator icon
-
-calcIcon.onclick = function(){
-    if(calculator.getAttribute('close') === 'true'){
-        calculator.style.cssText = '';
-        calculator.setAttribute('close', 'false');
-    }
-    if(calculator.getAttribute('turn') === 'true'){
-        calculator.style.cssText = '';
-        calculator.setAttribute('turn', 'false');
-    }
-};
