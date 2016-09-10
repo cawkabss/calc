@@ -1,0 +1,16 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+ul, li{
+  list-style: none;
+}
+
+@include font-face("../fonts/", "helvetica", 300);
+
+html, body{
+  font-family: helvetica;
+  font-size: 70px;
+  color: $base-color;
+}

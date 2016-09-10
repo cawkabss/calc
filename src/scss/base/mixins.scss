@@ -1,0 +1,31 @@
+@mixin font-face($font-base-path, $font-family, $font-weight, $font-style: normal) {
+
+  // Normalize parameters
+  $font-family: to_lower_case($font-family);
+  $font-style: if($font-style == normal, null, #{$font-style});
+
+  // Generate path & name
+  $file-path: #{$font-base-path}#{$font-family}/#{$font-weight};
+  $file-name: #{$font-family}-#{$font-weight};
+
+  // Generate @font-face
+  @font-face {
+    font-family: #{$font-family};
+    src: url('#{$file-path}/#{$file-name}.eot');
+    src: url('#{$file-path}/#{$file-name}.eot?#iefix') format('embedded-opentype'),
+    url('#{$file-path}/#{$file-name}.woff') format('woff'),
+    url('#{$file-path}/#{$file-name}.ttf') format('truetype'),
+    url('#{$file-path}/#{$file-name}.svg##{$font-family}') format('svg');
+
+    font-weight: $font-weight;
+    font-style: $font-style;
+  }
+}
+
+@mixin clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}

@@ -1,0 +1,125 @@
+.container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 15px;
+  margin: 0 auto;
+}
+
+.calculator-wrapper{
+  width: 10rem;
+  max-width: 100%;
+  border: 1px solid #bdbdbd;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0,0,0,.3);
+  transition: all .5s, linear;
+
+  &.close{
+    opacity: 0;
+    visibility: hidden;
+  }
+  &.turn{
+    opacity: 0;
+  }
+  &.expand{
+    transform: scale(1.2);
+  }
+}
+.row{
+  @include clearfix;
+}
+
+.btn{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  float: left;
+  width: 25%;
+  padding: 0;
+  margin: 0;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  line-height: 2rem;
+  background-color: $btn-bgc;
+  box-shadow: 0.04rem -0.04rem 0 rgba(0,0,0,.4) inset;
+
+  &:active{
+    background-color: darken($btn-bgc, 30%);
+  }
+  &-active{
+    background-color: darken($btn-bgc, 30%);
+  }
+}
+
+
+.calc-header{
+  position: relative;
+}
+
+.icons{
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.icon{
+  display: inline-block;
+  width: 0.4rem;
+  height: 0.4rem;
+  margin: 0 0.28rem;
+  border-radius: 50%;
+  cursor: pointer;
+
+  &-close{
+    background-color: #ff554d;
+  }
+
+  &-turn{
+    background-color: #ffbe2e;
+  }
+
+  &-expand{
+    background-color: #29cc42;
+  }
+}
+
+.input-text{
+  width: 100%;
+  height: 3.2rem;
+  padding-right: 0.6rem;
+  background-color: $input-bgc;
+  font-size: 1.6rem;
+  text-align: right;
+  border: none;
+  color: $invert-color;
+}
+.buttons :last-child :first-child{
+    width: 50%;
+}
+
+.main-operator{
+  background-color: $op-bgc;
+  color: $invert-color;
+
+  &:active{
+    background-color: darken($op-bgc, 30%);
+  }
+  &-active{
+    background-color: darken($op-bgc, 30%);
+  }
+}
+.calc-icon{
+  display: none;
+  width: 2rem;
+  height: 2rem;
+  margin-top: 2rem;
+  cursor: pointer;
+  &:hover{
+    transform: scale(1.2);
+  }
+}
